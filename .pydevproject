@@ -2,9 +2,16 @@
 <?eclipse-pydev version="1.0"?>
 
 <pydev_project>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.6</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python2.7-osqa</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/osqa</path>
+</pydev_pathproperty>
+<pydev_variables_property name="org.python.pydev.PROJECT_VARIABLE_SUBSTITUTION">
+<key>python_home</key>
+<value>/Users/syerram/.env/osqa/lib/python2.7</value>
+</pydev_variables_property>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>${python_home}/site-packages</path>
 </pydev_pathproperty>
 </pydev_project>

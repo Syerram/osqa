@@ -43,8 +43,8 @@
     <body>
         <div class="notify" style="display:none">
             {% autoescape off %}
-                {% if user_messages %}
-                    {% for message in user_messages %}
+                {% if messages %}
+                    {% for message in messages %}
                           <p class="darkred">{{ message }}</p>
                     {% endfor %}
                 {% endif %}
@@ -59,11 +59,13 @@
                     {% endblock%}
 
                 </div>
+                {% comment %}
                 <div id="CARight">
                     {% block sidebar%}
                     {% endblock%}
 
                 </div>
+                {% endcomment %}
                 <div id="tail" style="clear:both;">
                     {% block tail %}
                     {% endblock %}

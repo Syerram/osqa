@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -113,7 +114,7 @@ def process_provider_signin(request, provider):
                 except:
                     uassoc = AuthKeyUserAssociation(user=request.user, key=assoc_key, provider=provider)
                     uassoc.save()
-                    request.user.message_set.create(message=_('The new credentials are now associated with your account'))
+                    messages.add_message(request, messages.INFO, _('The new credentials are now associated with your account'))
                     return HttpResponseRedirect(reverse('user_authsettings'))
 
             return HttpResponseRedirect(reverse('auth_signin'))
@@ -221,7 +222,7 @@ def request_temp_login(request):
                 'user': user
             })
 
-            request.user.message_set.create(message=_("An email has been sent with your temporary login key"))
+            messages.add_message(request, messages.INFO, _("An email has been sent with your temporary login key"))
 
             return HttpResponseRedirect(reverse('index'))
     else:
@@ -277,9 +278,9 @@ def auth_settings(request):
         form = FormClass(request.POST, user=user_)
         if form.is_valid():
             if user_.has_usable_password():
-                request.user.message_set.create(message=_("Your password was changed"))
+                messages.add_message(request, messages.INFO, _("Your password was changed"))
             else:
-                request.user.message_set.create(message=_("New password set"))
+                messages.add_message(request, messages.INFO, _("New password set"))
                 FormClass = ChangePasswordForm
                 
             user_.set_password(form.cleaned_data['password1'])
@@ -312,7 +313,7 @@ def auth_settings(request):
 
 def remove_external_provider(request, id):
     association = get_object_or_404(AuthKeyUserAssociation, id=id)
-    request.user.message_set.create(message=_("You removed the association with %s") % association.provider)
+    messages.add_message(request, messages.INFO, _("You removed the association with %s") % association.provider)
     association.delete()
     return HttpResponseRedirect(reverse('user_authsettings'))
 
@@ -352,7 +353,7 @@ def login_and_forward(request,  user, forward=None, message=None):
     if message is None:
         message = _("Welcome back %s, you are now logged in") % user.username
 
-    request.user.message_set.create(message=message)
+    messages.add_message(request, messages.INFO, message)
     return HttpResponseRedirect(forward)
 
 @login_required

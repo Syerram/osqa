@@ -13,10 +13,12 @@
             <div class="item-count">{{question.answer_count|intcomma}}</div>
             <div>{% trans "answers" %}</div>
         </div>
+        {% comment %}
         <div class="views">
              <div class="item-count">{{question.view_count|cnprog_intword|safe}}</div>
              <div>{% trans "views" %}</div>
         </div>
+        {% endcomment %}
     </div>
 
     <h2><a title="{{ question.summary }}" href="{{ question.get_absolute_url }}">{{question.headline}}</a></h2>

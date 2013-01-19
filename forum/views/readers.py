@@ -95,8 +95,7 @@ def question_list(request, initial, list_description=_('questions'), sort=None, 
 
     return {
         "questions" : questions,
-        "questions_count" : questions.count(),
-        "tags_autocomplete" : _get_tags_cache_json(),
+        "tags_autocomplete" : None,
         "list_description": list_description,
         "base_path" : base_path,
         }
@@ -105,7 +104,7 @@ def question_list(request, initial, list_description=_('questions'), sort=None, 
 def search(request):
     if request.method == "GET" and "q" in request.GET:
         keywords = request.GET.get("q")
-        search_type = request.GET.get("t")
+        search_type = request.GET.get("t") or 'question'
         
         if not keywords:
             return HttpResponseRedirect(reverse(index))
@@ -237,7 +236,7 @@ def question(request, id, slug):
     objects_list = Paginator(answers, ANSWERS_PAGE_SIZE)
     page_objects = objects_list.page(page)
 
-    update_question_view_times(request, question)
+    #update_question_view_times(request, question)
 
     if request.user.is_authenticated():
         try:

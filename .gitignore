@@ -1,3 +1,4 @@
+.settings
 *.pyc
 *.swp
 *.log
@@ -14,3 +15,6 @@ pip-log.txt
 tmp/*
 forum/upfiles/[^R]*
 .svn
+.project
+.pydevproject
+.DS_Store

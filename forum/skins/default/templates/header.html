@@ -3,7 +3,7 @@
 {% load i18n %}
 	<div id="roof">
 		<div id="navBar">
-			<div id="top">
+			<div id="top" style="background: #6da6ee url(/upfiles/bg-nav.png) repeat-x 50% 50%;">
                 {% if request.user.is_authenticated %}
                     {% if request.user.is_superuser %}
                         <a href="{% url admin_index %}">{% trans "administration" %}</a>   
@@ -13,11 +13,13 @@
                 {% else %}
                     <a href="{% url auth_signin %}">{% trans "login" %}</a>
                 {% endif %}
-                <a href="{% url about %}">{% trans "about" %}</a>
-                <a href="{% url faq %}">{% trans "faq" %}</a>
+                {% comment %}
+                	<a href="{% url about %}">{% trans "about" %}</a>
+                	<a href="{% url faq %}">{% trans "faq" %}</a>
+                {% endcomment %}
 			</div>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
+			  <tr style="background: #6da6ee url(/upfiles/bg-nav.png) repeat-x 50% 50%;box-shadow: 0 2px 2px rgba(48,48,48,.3);">
 				<td width="23%">
 					<div id="logo">
 						<a href="{% url index %}">
@@ -27,11 +29,13 @@
             	</td>
 				<td width="77%" valign="bottom">
                 <div class="nav">
+                	{% comment %}
                     <a id="nav_questions"{% ifequal tab "questions" %} class="on"{% endifequal %} href="{% url questions %}" >{% trans "questions" %}</a>
                     <a id="nav_tags"{% ifequal tab "tags" %} class="on"{% endifequal %} href="{% url tags %}">{% trans "tags" %}</a>
                     <a id="nav_users"{% ifequal tab "users" %} class="on"{% endifequal %} href="{% url users %}">{% trans "users" %}</a>
                     <a id="nav_badges"{% ifequal tab "badges" %} class="on"{% endifequal %} href="{% url badges %}">{% trans "badges" %}</a>
                     <a id="nav_unanswered"{% ifequal tab "unanswered" %} class="on"{% endifequal %} href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
+                    {% endcomment %}
                     <div class="focus">
                     <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
                     </div>
@@ -50,12 +54,14 @@
                             <input type="text" class="searchInput" value="{{ keywords }}" name="q" id="keywords" />
                             <input type="submit" name="Submit" value="{% trans "search" %}" class="searchBtn" />
                         </div>
+                        {% comment %}
                         <div class="options">
                             <input id="type-question" type="radio" value="question" name="t" 
                                 checked="checked" /><label for="type-question">{% trans "questions" %}</label>
                             <input id="type-tag" type="radio" value="tag" name="t" /><label for="type-tag">{% trans "tags" %}</label>
                             <input id="type-user" type="radio" value="user" name="t" /><label for="type-user">{% trans "users" %}</label>
                         </div>
+                        {% endcomment %}
                     </form>
                 </td>
             </tr>

@@ -9,16 +9,21 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-    'forum.modules.module_templates_loader',
-    'forum.skins.load_template_source',
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.load_template_source',
+        'django.template.loaders.app_directories.load_template_source',
+        'forum.modules.module_templates_loader',
+        'forum.skins.load_template_source',
+    )),
 #     'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = [
     #'django.middleware.gzip.GZipMiddleware',
+    'johnny.middleware.LocalStoreClearMiddleware',
+    'johnny.middleware.QueryCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.locale.LocaleMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -36,9 +41,19 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'forum.context.application_settings',
     #'django.core.context_processors.i18n',
-    'forum.user_messages.context_processors.user_messages',#must be before auth
+    'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.auth', #this is required for admin
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'johnny.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+          
+}
+
+JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_myproj'
 
 ROOT_URLCONF = 'urls'
 
@@ -68,8 +83,11 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'django.contrib.markup',
+    'django.contrib.messages',
     'forum',
 ]
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 if DEBUG:
     try:
@@ -86,3 +104,8 @@ except:
     pass
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
+
+
+DEBUG_TOOLBAR_CONFIG = {
+                        'INTERCEPT_REDIRECTS' : False
+                    }

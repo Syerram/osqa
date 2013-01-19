@@ -267,9 +267,10 @@ blockquote {
     height: 35px;
     text-align: right; /*letter-spacing:1px; */
     margin-left: 20px;
-    text-decoration: underline;
     font-size: 12px;
-    color: #333333;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(45,88,141,.75);
+    text-decoration: none;
 }
 
 #logo {
@@ -342,7 +343,7 @@ blockquote {
 
 #searchBar {
     width: 958px;
-    background-color: #264A5F; /*#e9b96e;*/
+    /*background-color: #264A5F; /*#e9b96e;*/
     border: 1px solid #aaaaaa;
     padding: 12px;
     -moz-border-radius-topleft: 6px;
