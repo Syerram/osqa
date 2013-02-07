@@ -61,8 +61,8 @@ def command(func):
             response = func(request, *args, **kwargs)
             response['success'] = True
         except Exception, e:
-            #import sys, traceback
-            #traceback.print_exc(file=sys.stdout)
+            # import sys, traceback
+            # traceback.print_exc(file=sys.stdout)
 
             response = {
                 'success': False,
@@ -73,5 +73,26 @@ def command(func):
             return HttpResponse(simplejson.dumps(response), mimetype="application/json")
         else:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    return decorated
+
+def json_output(func):
+    """
+    Decorator that returns only json data
+    """
+    def decorated(request, *args, **kwargs):
+        try:
+            response = func(request, *args, **kwargs)
+            if isinstance(response, HttpResponse):
+                return response
+            
+            response['success'] = True
+        except Exception, e:
+            response = {
+                'success': False,
+                'error_message': str(e)
+            }
+
+        return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
     return decorated

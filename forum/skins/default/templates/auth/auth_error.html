@@ -1,0 +1,32 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+{% block title %}{% spaceless %}500 Error{% endspaceless %}{% endblock %}
+{% block forejs %}
+        <script type="text/javascript">
+        $().ready(function(){
+            $("#linkPrevious").bind("click", back=function(){history.go(-1);})            
+        });
+         
+        </script>
+{% endblock %}
+{% block content %}
+<div id="main-bar" class="">
+    <h3>
+        403 Authentication Error
+    </h3>
+
+</div>
+<div id="main-body" class="headNormal">
+    <div style="padding:5px 0px 10px 0;line-height:25px">
+        <h3>{% trans "sorry, couldn't log you in" %}</h3>
+        {% for message in messages %}
+        	{{message}}<br/>
+        {% endfor %}
+        {% trans "if you feel this is an accident, then please report this to the site administrators if you wish" %}
+        <ul>
+            <li><a href="{% url index %}">{% trans "goto main page" %}</a></li>
+        </u>
+    </div>
+
+</div>
+{% endblock %}

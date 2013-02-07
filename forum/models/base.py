@@ -20,31 +20,8 @@ import logging
 from forum.const import *
 
 class CachedManager(models.Manager):
-    use_for_related_fields = True
-
-    def get(self, *args, **kwargs):
-        try:
-            pk = [v for (k,v) in kwargs.items() if k in ('pk', 'pk__exact', 'id', 'id__exact') or k.endswith('_ptr__pk')][0]
-        except:
-            pk = None
-
-        if pk is not None:
-            key = self.model.cache_key(pk)
-            obj = cache.get(key)
-
-            if obj is None:
-                obj = super(CachedManager, self).get(*args, **kwargs)
-                cache.set(key, obj, 60 * 60)
-
-            return obj
-        
-        return super(CachedManager, self).get(*args, **kwargs)
-
-    def get_or_create(self, *args, **kwargs):
-        try:
-            return self.get(*args, **kwargs)
-        except:
-            return super(CachedManager, self).get_or_create(*args, **kwargs)
+    """No need for cachemanager, since we are using johnny cache"""
+    pass
 
 
 class BaseModel(models.Model):
@@ -56,7 +33,7 @@ class BaseModel(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(BaseModel, self).__init__(*args, **kwargs)
-        self._original_state = dict([(k, v) for k,v in self.__dict__.items() if not k in kwargs])
+        self._original_state = dict([(k, v) for k, v in self.__dict__.items() if not k in kwargs])
 
     @classmethod
     def cache_key(cls, pk):
@@ -64,7 +41,7 @@ class BaseModel(models.Model):
 
     def get_dirty_fields(self):
         missing = object()
-        return dict([(k, self._original_state.get(k, None)) for k,v in self.__dict__.items()
+        return dict([(k, self._original_state.get(k, None)) for k, v in self.__dict__.items()
                  if self._original_state.get(k, missing) == missing or self._original_state[k] != v])
 
     def save(self, *args, **kwargs):
@@ -90,8 +67,8 @@ class GenericContent(BaseModel):
     """
         Base class for Vote, Comment and FlaggedItem
     """
-    content_type   = models.ForeignKey(ContentType)
-    object_id      = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     class Meta:
@@ -129,9 +106,9 @@ class UserContent(models.Model):
 marked_deleted = django.dispatch.Signal(providing_args=["instance", "deleted_by"])
 
 class DeletableContent(models.Model):
-    deleted     = models.BooleanField(default=False)
-    deleted_at  = models.DateTimeField(null=True, blank=True)
-    deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_%(class)ss')
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    deleted_by = models.ForeignKey(User, null=True, blank=True, related_name='deleted_%(class)ss')
 
     active = UndeletedObjectManager()
 
@@ -180,8 +157,8 @@ class CancelableContent(models.Model):
 from node import Node, NodeRevision
 
 class QandA(Node):
-    wiki                 = models.BooleanField(default=False)
-    wikified_at          = models.DateTimeField(null=True, blank=True)
+    wiki = models.BooleanField(default=False)
+    wikified_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         abstract = True

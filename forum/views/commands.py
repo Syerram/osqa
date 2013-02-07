@@ -1,4 +1,3 @@
-import datetime
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import simplejson
@@ -12,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from forum.utils.decorators import ajax_method, ajax_login_required
 from decorators import command
-import logging
+
 
 class NotEnoughRepPointsException(Exception):
     def __init__(self, action):
@@ -86,14 +85,14 @@ def vote_post(request, id, vote_type):
 
         if vote.voted_at < datetime.datetime.now() - datetime.timedelta(days=int(settings.DENY_UNVOTE_DAYS)):
             raise Exception(
-                    _("Sorry but you cannot cancel a vote after %(ndays)d %(tdays)s from the original vote") %
+                    _("Sorry but you cannot cancel a vote after %(ndays)d %(tdays)s from the original vote") % 
                     {'ndays': int(settings.DENY_UNVOTE_DAYS), 'tdays': ungettext('day', 'days', int(settings.DENY_UNVOTE_DAYS))}
             )
 
         vote.cancel()
         vote_type = 'none'
     except ObjectDoesNotExist:
-        #there is no vote yet
+        # there is no vote yet
         vote = Vote(user=user, node=post, vote=vote_score)
         vote.save()
 
@@ -152,7 +151,7 @@ def like_comment(request, id):
         raise CannotDoOnOwnException(_('like'))
 
     if not user.can_like_comment(comment):
-        raise NotEnoughRepPointsException( _('like comments'))    
+        raise NotEnoughRepPointsException(_('like comments'))    
 
     try:
         like = LikedComment.active.get(comment=comment, user=user)
@@ -179,7 +178,7 @@ def delete_comment(request, id):
         raise AnonymousNotAllowedException(_('delete comments'))
 
     if not user.can_delete_comment(comment):
-        raise NotEnoughRepPointsException( _('delete comments'))
+        raise NotEnoughRepPointsException(_('delete comments'))
 
     comment.mark_deleted(user)
 
@@ -227,10 +226,10 @@ def comment(request, id):
         comment = get_object_or_404(Comment, id=request.POST['id'])
 
         if not user.can_edit_comment(comment):
-            raise NotEnoughRepPointsException( _('edit comments'))
+            raise NotEnoughRepPointsException(_('edit comments'))
     else:
         if not user.can_comment(post):
-            raise NotEnoughRepPointsException( _('comment'))
+            raise NotEnoughRepPointsException(_('comment'))
 
         comment = Comment(parent=post)
 
@@ -325,9 +324,9 @@ def subscribe(request, id):
             }
     }
 
-#internally grouped views - used by the tagging system
+# internally grouped views - used by the tagging system
 @ajax_login_required
-def mark_tag(request, tag=None, **kwargs):#tagging system
+def mark_tag(request, tag=None, **kwargs):  # tagging system
     action = kwargs['action']
     ts = MarkedTag.objects.filter(user=request.user, tag__name=tag)
     if action == 'remove':
@@ -347,7 +346,7 @@ def mark_tag(request, tag=None, **kwargs):#tagging system
     return HttpResponse(simplejson.dumps(''), mimetype="application/json")
 
 @ajax_login_required
-def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering system
+def ajax_toggle_ignored_questions(request):  # ajax tagging and tag-filtering system
     if request.user.hide_ignored_questions:
         new_hide_setting = False
     else:
@@ -356,14 +355,14 @@ def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering syste
     request.user.save()
 
 @ajax_method
-def ajax_command(request):#refactor? view processing ajax commands - note "vote" and view others do it too
+def ajax_command(request):  # refactor? view processing ajax commands - note "vote" and view others do it too
     if 'command' not in request.POST:
         return HttpResponseForbidden(mimetype="application/json")
     if request.POST['command'] == 'toggle-ignored-questions':
         return ajax_toggle_ignored_questions(request)
 
 @login_required
-def close(request, id):#close question
+def close(request, id):  # close question
     """view to initiate and process 
     question close
     """
@@ -388,7 +387,7 @@ def close(request, id):#close question
             }, context_instance=RequestContext(request))
 
 @login_required
-def reopen(request, id):#re-open question
+def reopen(request, id):  # re-open question
     """view to initiate and process 
     question close
     """
@@ -405,8 +404,8 @@ def reopen(request, id):#re-open question
             'question' : question,
             }, context_instance=RequestContext(request))
 
-#osqa-user communication system
-def read_message(request):#marks message a read
+# osqa-user communication system
+def read_message(request):  # marks message a read
     if request.method == "POST":
         if request.POST['formdata'] == 'required':
             request.session['message_silent'] = 1

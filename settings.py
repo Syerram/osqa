@@ -19,50 +19,52 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = [
-    #'django.middleware.gzip.GZipMiddleware',
+    # 'django.middleware.gzip.GZipMiddleware',
     'johnny.middleware.LocalStoreClearMiddleware',
     'johnny.middleware.QueryCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.locale.LocaleMiddleware',
-    #'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.locale.LocaleMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
     'forum.middleware.extended_user.ExtendedUser',
-    #'django.middleware.sqlprint.SqlPrintingMiddleware',
+    # 'django.middleware.sqlprint.SqlPrintingMiddleware',
     'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'forum.middleware.request_utils.RequestUtils',
     'forum.middleware.cancel.CancelActionMiddleware',
-    #'recaptcha_django.middleware.ReCaptchaMiddleware',
+    # 'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
     'forum.context.application_settings',
-    #'django.core.context_processors.i18n',
+    # 'django.core.context_processors.i18n',
     'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.auth', #this is required for admin
+    'django.core.context_processors.auth',  # this is required for admin
 )
 
 CACHES = {
     'default': {
         'BACKEND': 'johnny.backends.memcached.PyLibMCCache',
         'LOCATION': '127.0.0.1:11211',
+        'JOHNNY_CACHE': True,
     }
           
 }
 
-JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_myproj'
+JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_myproj'
 
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__),'forum','skins').replace('\\','/'),
+    os.path.join(os.path.dirname(__file__), 'forum', 'skins').replace('\\', '/'),
 )
 
-#UPLOAD SETTINGS
-FILE_UPLOAD_TEMP_DIR = os.path.join(os.path.dirname(__file__), 'tmp').replace('\\','/')
+# UPLOAD SETTINGS
+FILE_UPLOAD_TEMP_DIR = os.path.join(os.path.dirname(__file__), 'tmp').replace('\\', '/')
 FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
@@ -89,6 +91,20 @@ INSTALLED_APPS = [
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+DISABLED_MODULES = [
+                    'openidauth',
+                    'oauthauth',
+                    'facebookauth',
+                    'recaptcha',
+    ]
+
+KIPINHALL_AUTH_CLIENT_NAME = 'QA'
+KIPINHALL_AUTH_UNSALTED_KEY = '4TYabcTRANS'
+
+KIPINHALL_PROFILE_LOGIN_URL = "http://kipinhall-local.com/account/remote/login/"
+KIPINHALL_PROFILE_URL = "http://kipinhall-local.com/account/remote/profile/"
+KIPINHALL_QA_SEND_UPDATE = "http://kipinhall-local.com/content/forum/update/"
+
 if DEBUG:
     try:
         import debug_toolbar
@@ -103,7 +119,7 @@ try:
 except:
     pass
 
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', ]
 
 
 DEBUG_TOOLBAR_CONFIG = {
